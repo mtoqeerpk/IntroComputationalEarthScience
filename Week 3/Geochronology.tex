@@ -1,0 +1,115 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{mhchem}
+
+
+\date{}							% Activate to display a given date or no date
+\parindent 0in
+\parskip 6pt
+
+\begin{document}
+ 
+\section*{Geochronology using radiogenic isotopes}
+ 
+Isotope geochemistry is a branch of the Earth Sciences that studies the isotopic signatures of rocks and minerals to study Earth processes. Two subclasses of isotope geochemistry are stable isotopes and radiogenic isotopes.   The study of radiogenic isotopes examines how radioactive isotopes actively decay from a parent isotope into a daughter isotope.  The rate of decay for the various radioactive isotopes can vary from fractions of a second to billions of years, depending on the particular  isotope. 
+
+We  can use the relative abundance of the parent and daughter isotopes in a given sample as a clock that records the amount of time since a rock formed. Similarly, you may have already heard about radiocarbon dating, which measures the relative abundance of  carbon isotopes to determine the age of objects containing organic carbon (for example wooden objects found at archaeological sites).
+
+In radioactive decay, the time rate of decay of the parent isotope is proportional to its concentration. Thus, if $P$ is a measure of the concentration of the parent isotope, we can state this mathematically as:
+\begin{eqnarray}
+\frac{d P(t) }{dt} = -\lambda P(t),
+\end{eqnarray}
+$\lambda$ is the decay constant. We can integrate this differential equation over time to obtain the radioactive decay equation:
+\begin{eqnarray}
+P(t) = P_0 e^{-\lambda t},
+\label{decay}
+\end{eqnarray}
+where $P_0$ is the initial concentration when $t=0$. Now you can see that radioactive decay is an exponential process. The half-life $t_{1/2}$ is the time it takes for $P = P_0/2$, meaning when half of the original material has decayed.  Inserting this into the decay equation, gives
+\begin{eqnarray}
+\frac{P}{P_0} = \frac{1}{2} =  e^{-\lambda t_{1/2}}.
+\label{halflife}
+\end{eqnarray}
+From this you can see that if you measure the time $t_{1/2}$, you can solve for $\lambda$. Conversely, if you measure $\lambda$, you can solve for $t_{1/2}$.
+
+Rearranging the decay equation (\ref{decay}) we can write an expression for $P_0$:
+\begin{eqnarray}
+ P_0 = P(t)e^{\lambda t}
+ \label{P0}
+\end{eqnarray}
+The amount of daughter nuclides  $D^*$ produced by the radioactive decay  is the difference between the initial concentration and the present day concentration of the parent isotope:
+\begin{eqnarray}
+D^*(t) = P_0 - P(t)
+\end{eqnarray}
+%
+Inserting $P_0$ from equation  \ref{P0} gives: 
+\begin{eqnarray}
+D^*(t) =  P(t)(e^{\lambda t}-1)
+\end{eqnarray}
+%
+The total number of daughter nuclides $D$ is then the sum of those produced by decay of the parent isotope as well as any initial concentration in the sample $D_0$:
+\begin{eqnarray}
+D(t) = D_0+D^*(t)
+\end{eqnarray}
+%
+The full expression is then
+\begin{eqnarray}
+D(t) = D_0+P(t)(e^{\lambda t}-1)
+\end{eqnarray}
+%
+While we can measure $D(t)$ and $P(t)$ in the lab, you can't extract the age of the rock $t$ without also  knowing the initial concentration of the daughter isotope $D_0$. 
+
+Consider the decay of uranium to lead.  There are two radioactive uranium isotopes that decay:
+\begin{eqnarray}
+ \ce{^{238}U} \longrightarrow \ce{^{206}Pb}  \\
+\ce{^{235}U} \longrightarrow \ce{^{207}Pb} 
+\end{eqnarray}
+ $\ce{^{238}U}$ has a half-life of 4.47 billion years and $\ce{^{235}U}$ has a half-life of 704 million years. The full expressions are then:
+\begin{eqnarray}
+\ce{^{206}Pb} = \ce{^{206}Pb}_0 + \ce{^{238}U}(e^{\lambda_{238} t}-1) \label{u238}\\
+\ce{^{207}Pb} = \ce{^{207}Pb}_0 + \ce{^{235}U}(e^{\lambda_{235} t}-1) \label{u235}
+\end{eqnarray}
+where $\lambda_{238}$ is the decay constant for $\ce{^{238}U}$ and $\lambda_{235}$ is the decay constant for $\ce{^{235}U}$.
+
+Measuring the absolute abundances of isotopes in a  rock sample can be done in the lab; however, it is much more accurate to measure the {\it relative} abundance of isotopes, which can be done with a high level of precision using a mass spectrometer. Thus, it is more common to normalize the decay equations using a stable (i.e., non-radiogenic) isotope.
+
+ For  U-Pb decay, usually the  non-radiogenic isotope $\ce{^{204}Pb}$ is used. The above equations are then rewritten as
+%
+\begin{eqnarray}
+\left ( \frac{\ce{^{206}Pb}}{\ce{^{204}Pb}} \right ) = \left ( \frac{\ce{^{206}Pb}}{\ce{^{204}Pb}} \right )_0   + \left ( \frac{\ce{^{238}U}}{\ce{^{204}Pb}} \right ) (e^{\lambda_{238} t}-1) \\
+\left ( \frac{\ce{^{207}Pb}}{\ce{^{204}Pb}} \right ) = \left ( \frac{\ce{^{207}Pb}}{\ce{^{204}Pb}} \right )_0   + \left ( \frac{\ce{^{235}U}}{\ce{^{204}Pb}} \right ) (e^{\lambda_{235} t}-1)
+\end{eqnarray}
+% 
+Note that both of these formulas are basically the equation for a line, $y = m x + b$:
+\begin{eqnarray}
+\underbrace{ \left ( \frac{\ce{^{206}Pb}}{\ce{^{204}Pb}} \right )}_\text{y} 
+= 
+\underbrace{  (e^{\lambda_{238} t}-1) }_\text{m}  
+ \underbrace{  \left ( \frac{\ce{^{238}U}}{\ce{^{204}Pb}} \right )}_\text{x}   
+ +
+ \underbrace{ \left ( \frac{\ce{^{206}Pb}}{\ce{^{204}Pb}} \right )_0}_\text{b} .
+\end{eqnarray}
+A line can be fit to a plot of $ \left ( \frac{\ce{^{206}Pb}}{\ce{^{204}Pb}} \right )$ versus $ \left ( \frac{\ce{^{238}U}}{\ce{^{204}Pb}} \right )$ and the age $t$ is found from the slope of the line $m$. The intercept of the line  $b$ is the initial ratio $ \left ( \frac{\ce{^{206}Pb}}{\ce{^{204}Pb}} \right )_0$. A similar analysis can be carried out for the $\ce{^{238}U}$ system.
+
+In certain minerals such as zircons that form during cooling in a magma body, lead atoms are  excluded from the developing crystal structure and thus Pb$_0 = 0$ in the above expressions.  Equations \ref{u238} and \ref{u235} simplify to
+\begin{eqnarray}
+\left ( \frac{\ce{^{206}Pb}}{\ce{^{238}U}} \right ) =   (e^{\lambda_{238} t}-1) \label{r238} \\
+\left ( \frac{\ce{^{207}Pb}}{\ce{^{235}U}} \right ) =    (e^{\lambda_{235} t}-1)\label{r235}
+\end{eqnarray}
+Taking the ratio of these equations gives:
+\begin{eqnarray}
+\left ( \frac{\ce{^{206}Pb}}{\ce{^{238}U}} \right )  =  
+\frac{ (e^{\lambda_{238} t}-1)}{  (e^{\lambda_{235} t}-1) } \left ( \frac{\ce{^{207}Pb}}{\ce{^{235}U}} \right ).
+\end{eqnarray}
+Plotting these two ratios against each other results in a {\it concordia} curve that depends non-linearly on the time $t$.  The age $t$ for a given sample can be determined by comparing  plots of the sample's   $\left ( \frac{\ce{^{206}Pb}}{\ce{^{238}U}} \right )$ versus $\left ( \frac{\ce{^{207}Pb}}{\ce{^{235}U}} \right  )$ with predictions for times $t$ computed using 
+ equations \ref{r238} and \ref{r235}. 
+ 
+
+
+
+
+
+\end{document}  
