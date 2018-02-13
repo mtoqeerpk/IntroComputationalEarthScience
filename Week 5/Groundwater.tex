@@ -53,7 +53,7 @@ This is known as a forward finite difference formula since the function is evalu
 
 A similar method is used to find the formula for the second order derivative approximation. We will skip the derivation and just state the formula:
 \begin{eqnarray}
-f''(x_i) \approx \frac{f(x_{i+1}) - 2 f(x_i) + f(x_{i-1})  }{h^2} 
+f''(x_i) \approx \frac{f(x_{i+1}) - 2 f(x_i) + f(x_{i-1})  }{\Delta^2} 
 \label{SOFD}
 \end{eqnarray}
 This is known as a central finite difference method since it uses the function  values on the right side at $x_{i+1}$ and left side at $x_{i-1}$, in addition to the central value at $x_i$.
@@ -154,7 +154,7 @@ This ensures that the time step is small enough to be accurate using the finite 
 
 For this problem, you will not specify the number of time-steps you want the code to perform (i.e., you will not use a {\it for-loop}).  Instead, you will set up the code to continue stepping through time until some steady-state threshold has been reached, i.e., when the head $h$ is no longer changing appreciably between time-steps.  We will call this threshold our steady state tolerance, and define it to be equal to the sum of the absolute value of the differences in $h$ between the current and previous time-steps:
 \begin{eqnarray}
-\delta_h = \sum_j | h_j^{k+1} - h_k^k |
+\delta_h = \sum_j | h_j^{k+1} - h_j^k |
 \end{eqnarray}
 If the head is changing a lot between time steps, $\delta_h$ will be large, whereas once the solution is close to the steady state,  $\delta_h$ will become negligibly small.
 
