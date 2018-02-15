@@ -53,7 +53,7 @@ This is known as a forward finite difference formula since the function is evalu
 
 A similar method is used to find the formula for the second order derivative approximation. We will skip the derivation and just state the formula:
 \begin{eqnarray}
-f''(x_i) \approx \frac{f(x_{i+1}) - 2 f(x_i) + f(x_{i-1})  }{\Delta^2} 
+f''(x_i) \approx \frac{f(x_{i+1}) - 2 f(x_i) + f(x_{i-1})  }{\Delta x^2} 
 \label{SOFD}
 \end{eqnarray}
 This is known as a central finite difference method since it uses the function  values on the right side at $x_{i+1}$ and left side at $x_{i-1}$, in addition to the central value at $x_i$.
@@ -116,17 +116,17 @@ My last comment is that this differential equation is called a homogeneous equat
 %------------------------------------------------------------------------------------------
 \section*{Finite Difference Numerical Solution}
 %------------------------------------------------------------------------------------------
-Now we will numerically approximate the solution to the partial differential equation (\ref{transient}) using the finite difference method.  Since this is a one-dimension problem, our modeling grid will consist of a 1D grid of cells arranged laterally as shown in the image below:
 
-\begin{figure}[htbp]
+Now we will numerically approximate the solution to the partial differential equation (\ref{transient}) using the finite difference method.  Since this is a one-dimension problem, our modeling grid will consist of a 1D grid of cells arranged laterally as shown in Figure \ref{grid}.
+%
+\begin{figure}[tb]
 \begin{center}
 \includegraphics[width=.75\textwidth]{grid.pdf}
-\caption{1D finite difference grid cells example.  The cells have spacing $\Delta x$ and gray arrows represent flow between cells. In our simple example, each cell has the same values for $T$ and $S$ and $b$.  }
+\caption{1D finite difference grid cells example.  The cells have spacing $\Delta x$ and gray arrows represent flow between cells. In our simple example, each cell has the same values for $T$, $S$ and $b$.  }
 \label{grid}
 \end{center}
 \end{figure}
-
-
+ 
 We will divide our problem up into evenly spaced cells of 25 m width, denoting the position of each cell as $x = \{x_0, x_1, x_2, x_3, ... x_n\}$.   Within each cell we will solve for the evolution of the hydraulic head over time using evenly spaced values of time $t = \{t_0, t_1, t_2, t_3, ... t_m\}$.  We will represent head at position $x_j$ time step $t_k$ using the notation $h_j^k$. 
 
 
@@ -143,14 +143,35 @@ h_j^{k+1} = h_j^{k} \left ( 1 - \frac{2T\Delta t}{S\Delta x^2} \right) +  \frac{
 \label{fdtransient_step}
 \end{eqnarray}
 
-In this formulation, everything on the right-hand side (RHS) of the equation is known, being based entirely on head values from the previous time step $t_k$. Thus you can solve for each value of  $h_j^{k+1}$ based on the previous values of $h$ at that location ( $h_j^{k}$),and  the previous values of $h$ in the cells to either side of that location ( $h_{j-1}^{k}$ and $h_{j+1}^{k}$ ).
+In this formulation, everything on the right-hand side (RHS) of the equation is known, being based entirely on head values from the previous time step $t_k$. 
+ Thus you can solve for each value of  $h_j^{k+1}$ based on the previous values of $h$ at that location ($h_j^{k}$),and  the previous values of $h$ in the cells to either side of that location ( $h_{j-1}^{k}$ and $h_{j+1}^{k}$ ).
  This equation also includes the constant aquifer properties $T$ and $S$, the cell width ($\Delta x$), and the length of the time-step ($\Delta t$). 
+
+Note that  the constant terms in equation \ref{fdtransient_step} can be grouped together into constant coefficients $a$ and $b$,  allowing for a  simpler version of the equation:
+\begin{eqnarray}
+h_j^{k+1} &=&a\, h_j^{k}  + b \left( h_{j+1}^{k} + h_{j-1}^{k} \right),
+\end{eqnarray}
+where
+\begin{eqnarray}
+a&=&  1 - \frac{2T\Delta t}{S\Delta x^2}, \\
+b &=&   \frac{T\Delta t}{S\Delta x^2}.
+\end{eqnarray}
+Figure \ref{grid_step} graphically shows how a grid cell is updated from time step $t_k$ to $t_{k+1}$ by multiplying its value by $a$ and then adding this to $b$ multiplied by the neighboring values of $h$ from time step $t_k$ (and not $t_{k+1}$).
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=.9\textwidth]{grid_step.pdf}
+\caption{1D finite difference grid cells example.  The cells have spacing $\Delta x$ and gray arrows represent flow between cells. In our simple example, each cell has the same values for $T$, $S$ and $b$.  }
+\label{grid_step}
+\end{center}
+\end{figure}
 
 The time-step size should be limited by:
 \begin{eqnarray}
  \frac{T\Delta t}{S\Delta x^2} \le 0.5
 \end{eqnarray}
 This ensures that the time step is small enough to be accurate using the finite difference approximation. Notice how it depends on both $T/S$ and $\Delta x^2$.
+
 
 For this problem, you will not specify the number of time-steps you want the code to perform (i.e., you will not use a {\it for-loop}).  Instead, you will set up the code to continue stepping through time until some steady-state threshold has been reached, i.e., when the head $h$ is no longer changing appreciably between time-steps.  We will call this threshold our steady state tolerance, and define it to be equal to the sum of the absolute value of the differences in $h$ between the current and previous time-steps:
 \begin{eqnarray}
