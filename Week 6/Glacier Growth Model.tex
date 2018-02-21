@@ -173,7 +173,7 @@ where $\Delta t$ has units of years here.
 \item The ice flux $Q$ (area/yr) in a given spot is proportional to the ice thickness at that spot and its total velocity $u_s + u_d$. See equation \ref{eq:Q}. Thus we expect this to be greatest for thick ice on steep slopes and smallest on flat or low slopes.
 \item The net flux at a given location is equal to the difference of the outgoing and incoming flux. This is just conserving mass, or in our specific case, the equivalent conservation of the total cross sectional area of ice (in the vertical plane). See equation \ref{eq:deltaQ}.
 \item Ice can also be added or lost at a given location due to snowfall or melting. See equation \ref{eq:b}.
-\item For a given control volume cell, the total change in the height of the glacier there depends on the flux $Q$, the local snowfall or melt  rate $b$ and the length of the time step taken. See equation \ref{eq:h_update}.
+\item For a given control volume cell, the total change in the height of the glacier there depends on the net flux $\Delta Q$, the local snowfall or melt  rate $b$ and the length of the time step taken. See equation \ref{eq:h_update}.
 \end{enumerate}
 
  
@@ -183,11 +183,11 @@ where $\Delta t$ has units of years here.
  
 Now let's consider how to put all this information together so that you can write a modeling code that will simulate the time evolution of a growing glacier.  A pseudocode outlining the procedure is shown in Algorithm \ref{pseudocode} below.
 
-To compute the slope at each location, you can the approximation:
+To compute the slope at each location, you can use the finite difference approximation:
 \begin{eqnarray}
-\theta_i = \arctan(-\Delta z /\Delta x)
+\theta_i = \arctan(-\Delta z_i /\Delta x)
 \end{eqnarray}
- The slope angle should be positive clockwise down from horizontal. Here $\Delta z$ is the difference in the height of the top of the glacier between cell $i+1$ and cell $i$. For $n$ cells, this will only give you $n-1$ values for $\theta$; you can append the last value (i.e. repeat the last value) so your $\theta$ array has $n$ values.  Also, the slope is for the top of the glacier, so use $z$ when computing it, NOT $z_{bed}$ or $h$ alone.
+ The slope angle should be positive clockwise down from horizontal. Here $\Delta z_i$ is the difference in the height of the top of the glacier between cell $i+1$ and cell $i$. For $n$ cells, this will only give you $n-1$ values for $\theta$; you can append the last value (i.e. repeat the last value) so your $\theta$ array has $n$ values.  Also, the slope is for the top of the glacier, so use $z$ when computing it, NOT $z_{bed}$ or $h$ alone.
 
 \begin{algorithm}[H]
 \label{pseudocode} % add a label for \ref{} commands later in the document
@@ -207,8 +207,7 @@ Initialize arrays $h = 0$  and $z = z_{bed} + h$, where $h$ and $z$ have the sam
 	Compute $\theta, \tau_b, u_s, u_d, Q$ and $b$ for each cell. Limit $b$ so that  $b \le 2$. \\
 	Compute $\Delta Q_i$ for each cell. Note for the first cell: $\Delta Q_0 = Q_0$ \\
 	Compute $\Delta h_i$ for each cell. \\
-	Update $h$: $h = h + \Delta h$. \\
-	Limit $ h$ so that $h \ge 0$. \\
+	Update $h$: $h = h + \Delta h$. Limit $ h$ so that $h \ge 0$. \\
 	Update $z$: $z = z_{bed} + h$. \\
 	$t = t+\Delta t$ \\
 	}
