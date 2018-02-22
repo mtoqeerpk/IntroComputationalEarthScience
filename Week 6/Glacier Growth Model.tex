@@ -203,7 +203,7 @@ To compute the slope at each location, you can use the finite difference approxi
 \end{itemize}
 Initialize arrays $h = 0$  and $z = z_{bed} + h$, where $h$ and $z$ have the same number of elements as $x$.\\
  $t = 0$ \\
-    \While{$t < t_{max}$}{  
+    \While{$t \le t_{max}$}{  
 	Compute $\theta, \tau_b, u_s, u_d, Q$ and $b$ for each cell. Limit $b$ so that  $b \le 2$. \\
 	Compute $\Delta Q_i$ for each cell. Note for the first cell: $\Delta Q_0 = Q_0$ \\
 	Compute $\Delta h_i$ for each cell. \\
