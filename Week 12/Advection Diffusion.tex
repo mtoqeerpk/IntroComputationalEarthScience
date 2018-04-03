@@ -57,25 +57,25 @@ Here we will consider the one-dimension (1D) chemical concentration advection di
 \end{eqnarray}
  We will use the forward-in-time, center-in-space (FTCS) finite difference method that we have previously used for the diffusion equation.
  
-Again we will use superscripts to denote time indices and subscripts to denote spatial node indices for our time and spatial sampling grids. The various terms in the above equation have FTCS approximations at position $ x_i$ and time $ t_i$:
+Again we will use superscripts to denote time indices and subscripts to denote spatial node indices for our time and spatial sampling grids. The various terms in the above equation have FTCS approximations at position $ x_i$ and time $ t_n$:
 \begin{eqnarray}
 	\frac{\partial C}{\partial t} &\approx& \frac{C^{n+1}_i - C^n_i}{\Delta t} , \\
 	u\frac{\partial C}{\partial x} &\approx& u \frac{C^{n}_{i+1} - C^n_{i-1}}{2\Delta x} , \label{dcdx} \\
-	\kappa_c\frac{\partial^2 C}{\partial x^2} &\approx& \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}}{\Delta x^2}
+	\kappa_c\frac{\partial^2 C}{\partial x^2} &\approx& \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i+1}}{\Delta x^2}
 \end{eqnarray}
 You have already seen the first and third expressions above, while equation \ref{dcdx} is a center-in-space approximation of the first order spatial derivative at $x_i$. Notice how it uses the values at positions $x_{i-1}$ and $x_{i+1}$ to approximate the spatial derivative at $x_i$. Thus is uses the neighboring values but not the value at the point itself. 
 
 Inserting these expressions into the equation \ref{1Dad} gives:
 \begin{eqnarray}
-	 \frac{C^{n+1}_i - C^n_i}{\Delta t} + u \frac{C^{n}_{i+1} - C^n_{i-1}}{2\Delta x} = \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}}{\Delta x^2}
+	 \frac{C^{n+1}_i - C^n_i}{\Delta t} + u \frac{C^{n}_{i+1} - C^n_{i-1}}{2\Delta x} = \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i+1}}{\Delta x^2}
 \end{eqnarray}
 which we rearrange as
 \begin{eqnarray}
-	 \frac{C^{n+1}_i - C^n_i}{\Delta t} = - u \frac{C^{n}_{i+1} - C^n_{i-1}}{2\Delta x} + \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}}{\Delta x^2}
+	 \frac{C^{n+1}_i - C^n_i}{\Delta t} = - u \frac{C^{n}_{i+1} - C^n_{i-1}}{2\Delta x} + \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i+1}}{\Delta x^2}
 \end{eqnarray}
 and then we isolate the only ``next time" term $C^{n+1}_i$ so that it's on the left-hand side of the equation, giving us our 1D FTCS solution to the advection diffusion equation:
 \begin{eqnarray}
-	C^{n+1}_i = C^n_i - u \Delta t \frac{C^{n}_{i+1} - C^n_{i-1}}{2\Delta x} + \kappa_c \Delta t \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}}{\Delta x^2}
+	C^{n+1}_i = C^n_i - u \Delta t \frac{C^{n}_{i+1} - C^n_{i-1}}{2\Delta x} + \kappa_c \Delta t \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i+1}}{\Delta x^2}
 \end{eqnarray}
 Using the substitutions:
 \begin{eqnarray}
@@ -85,7 +85,7 @@ Using the substitutions:
 We can write the FTCS expression even more compactly as:
 \begin{eqnarray}
 	C^{n+1}_i = C^n_i + a \left ( {C^{n}_{i+1} - C^n_{i-1}}\right ) +  b 
-\left ( {C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}} \right ).
+\left ( {C^{n}_{i-1} - 2 C^n_{i}+C^n_{i+1}} \right ).
 \end{eqnarray}
 This is the equation you will use to solve the homework assignment.
 
@@ -105,9 +105,9 @@ The expression $ \frac{2 \kappa}{u^2} $ is new and arrises from  the advection p
 In two dimensions $(x,y)$ the advection diffusion equation above has the FTCS solution:
 \begin{eqnarray}
 	C^{n+1}_{i,j} &=& C^n_{i,j} + a \left ( {C^{n}_{i+1,j} - C^n_{i-1,j}}\right ) +  b 
-\left ( {C^{n}_{i-1,j} - 2 C^n_{i,j}+C^n_{i-1,j}} \right )   \\
+                      \left ( {C^{n}_{i-1,j} - 2 C^n_{i,j}+C^n_{i+1,j}} \right )   \\
 &+ & c \left ( {C^{n}_{i,j+1} - C^n_{i,j-1}}\right ) +  b
-\left ( {C^{n}_{i,j+1} - 2 C^n_{i,j}+C^n_{i,j-1}} \right )
+\left ( {C^{n}_{i,j-1} - 2 C^n_{i,j}+C^n_{i,j+1}} \right )
 \end{eqnarray}
 The $j$ subscript refers to the 2D grid's $y$ index and $c$ is the $y$ first order spatial derivative coefficient
 \begin{eqnarray}
