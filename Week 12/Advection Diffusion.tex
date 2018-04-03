@@ -1,0 +1,116 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+ \usepackage{amsmath}
+\usepackage[]{algorithm2e} 			% for the pseudocode
+
+\date{}							% Activate to display a given date or no date
+\parindent 0in
+\parskip 6pt
+
+
+
+\begin{document}
+
+\title{\bf Advection-Diffusion Modeling with the Finite Difference Method }
+
+\maketitle
+ 
+Earlier in the course we looked at transient diffusion modeling for both groundwater flow and thermal  modeling.  Here we will look at a similar governing partial differential equation, but now we will expand it to  include an {\it advection} term. By advection, we mean the \ transport of a quantity by the bulk motion of matter. For example, the thermal diffusion equation can be augmented with an advection term, giving:
+ \begin{eqnarray}
+ 	\frac{\partial T}{\partial t} + u  \frac{\partial T}{\partial x}  =   \kappa\frac{\partial^2 T}{\partial x^2} .
+\end{eqnarray}
+Here $u  \frac{\partial T}{\partial x}$ is the new advection term, where $u$ is the velocity (along the $x$ direction). Notice how the advection term includes the first-order spatial derivative of temperature. The above equation could be used to model (in 1D) convection of thermal structure including both diffusive and advective transport. For example, this equation would apply for temperature variations in a slow moving stream, where the temperature cools laterally by diffusion (as we looked at previously in the cooling dike problem), but also by the bulk motion of the water in the down stream direction. 
+
+The advection diffusion equation can also be applied to chemical concentrations using the partial differential equation:
+ \begin{eqnarray}
+ 	\frac{\partial C}{\partial t} + u  \frac{\partial C}{\partial x}  =   \kappa_c\frac{\partial^2 C}{\partial x^2}  
+\end{eqnarray}
+where $C$ is the concentration of a chemical species and $ \kappa_c$ is its chemical diffusivity in the medium. This equation could be used to track how a chemical concentration changes over time due to diffusion and advection. For example, it could be used to simulate the concentration of a  toxic spill in a river  over time as the river water flows downstream. Another example would be to model the diffusion and advection of a certain chemical species due to a current $u$ on the surface of the ocean.
+
+The two dimensional (2D) version of the advection diffusion equation has the form
+ \begin{eqnarray}
+ 	\frac{\partial T}{\partial t} + u  \frac{\partial T}{\partial x}  + v  \frac{\partial T}{\partial y} =   \kappa\frac{\partial^2 T}{\partial x^2}  + \kappa\frac{\partial^2 T}{\partial y^2}  
+\end{eqnarray}
+where $v$ is the velocity in the $y$ direction.  Thus is it only slightly more complicated than the 1D version. As you might guess, the 3D version of the advection diffusion equation is similar to the above but adds on terms for the $z$ derivatives:
+ \begin{eqnarray}
+ 	\frac{\partial T}{\partial t} + u  \frac{\partial T}{\partial x}  + v  \frac{\partial T}{\partial y} + w  \frac{\partial T}{\partial z}  =   \kappa\frac{\partial^2 T}{\partial x^2}  + \kappa\frac{\partial^2 T}{\partial y^2}  + \kappa\frac{\partial^2 T}{\partial z^2}  
+\end{eqnarray}
+where $w$ is the velocity in the $z$ direction. For those of you familiar with vector calculus, the above equation can be written in shorter form as:
+ \begin{eqnarray}
+ 	\frac{\partial T}{\partial t} + \vec{v} \cdot \nabla T =   \kappa \nabla^2 T 
+\end{eqnarray}
+where $\vec{v}$ is the velocity vector (i.e. it has both magnitude and direction).
+
+In your homework you will only consider some simple applications of the advection-diffusion equation, but you should know that there are significantly more complicated differential equations that govern fluid dynamics, such as the Navier-Stokes equations.   Also, in the examples below, we will consider the velocity to be known and fixed, whereas in more complicated scenarios, the velocity may vary dynamically (i.e. over time) as the temperature $T$ changes and thus the viscosity and buoyancy of a material changes. In such a scenario, another partial differential equation is introduced to govern the velocity as a function of time and space. This is commonly done for geodynamic models of convective flow in Earth's mantle.
+
+%------------------------------------------------------------------------------------------
+\section*{Advection-Diffusion with the FTCS Finite-Difference Method }
+%------------------------------------------------------------------------------------------
+Here we will consider the one-dimension (1D) chemical concentration advection diffusion equation given above and will assume a uniform medium with chemical diffusivity $\kappa_c$:
+ \begin{eqnarray}
+ 	\frac{\partial C}{\partial t} + u  \frac{\partial C}{\partial x}  =   \kappa_c\frac{\partial^2 C}{\partial x^2} 
+	\label{1Dad} 
+\end{eqnarray}
+ We will use the forward-in-time, center-in-space (FTCS) finite difference method that we have previously used for the diffusion equation.
+ 
+Again we will use superscripts to denote time indices and subscripts to denote spatial node indices for our time and spatial sampling grids. The various terms in the above equation have FTCS approximations at position $ x_i$ and time $ t_i$:
+\begin{eqnarray}
+	\frac{\partial C}{\partial t} &\approx& \frac{C^{n+1}_i - C^n_i}{\Delta t} , \\
+	u\frac{\partial C}{\partial x} &\approx& u \frac{C^{n}_{i+1} - C^n_{i-1}}{\Delta x} , \label{dcdx} \\
+	\kappa_c\frac{\partial^2 C}{\partial x^2} &\approx& \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}}{\Delta x^2}
+\end{eqnarray}
+You have already seen the first and third expressions above, while equation \ref{dcdx} is a center-in-space approximation of the first order spatial derivative at $x_i$. Notice how it uses the values at positions $x_{i-1}$ and $x_{i+1}$ to approximate the spatial derivative at $x_i$. Thus is uses the neighboring values but not the value at the point itself. 
+
+Inserting these expressions into the equation \ref{1Dad} gives:
+\begin{eqnarray}
+	 \frac{C^{n+1}_i - C^n_i}{\Delta t} + u \frac{C^{n}_{i+1} - C^n_{i-1}}{\Delta x} = \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}}{\Delta x^2}
+\end{eqnarray}
+which we rearrange as
+\begin{eqnarray}
+	 \frac{C^{n+1}_i - C^n_i}{\Delta t} = - u \frac{C^{n}_{i+1} - C^n_{i-1}}{\Delta x} + \kappa_c \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}}{\Delta x^2}
+\end{eqnarray}
+and then we isolate the only ``next time" term $C^{n+1}_i$ so that it's on the left-hand side of the equation, giving us our 1D FTCS solution to the advection diffusion equation:
+\begin{eqnarray}
+	C^{n+1}_i = C^n_i - u \Delta t \frac{C^{n}_{i+1} - C^n_{i-1}}{\Delta x} + \kappa_c \Delta t \frac{C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}}{\Delta x^2}
+\end{eqnarray}
+Using the substitutions:
+\begin{eqnarray}
+	a &=&  - \frac{ u \Delta t}{\Delta x},  \\
+	b &=&   \frac{\kappa_c \Delta t}{\Delta x^2}.
+\end{eqnarray}
+We can write the FTCS expression even more compactly as:
+\begin{eqnarray}
+	C^{n+1}_i = C^n_i + a \left ( {C^{n}_{i+1} - C^n_{i-1}}\right ) +  b 
+\left ( {C^{n}_{i-1} - 2 C^n_{i}+C^n_{i-1}} \right ).
+\end{eqnarray}
+This is the equation you will use to solve the homework assignment.
+
+%------------------------------------------------------------------------------------------
+\subsection*{Stability of the FTCS Method for Advection-Diffusion}
+%------------------------------------------------------------------------------------------
+Earlier in this course when considering the transient diffusion problem we saw that the time step $\Delta t$ had to be limited to achieve a stable solution with the FTCS method.  Likewise, the advection diffusion method needs a suitably small time step to be stable, but it must also now include the effects of the advection term. We don't have time to cover the derivation, but in order to be stable, the time step must satisfy:
+  \begin{eqnarray}
+	\Delta t \le \min{ \left ( \frac{\Delta x^2}{2 \kappa} ,  \frac{2 \kappa}{u^2}  \right ) }
+\end{eqnarray}
+The expression $ \frac{2 \kappa}{u^2} $ is new and arrises from  the advection part of the equation. Thus you can see that as the advection velocity $u$ increases, a smaller time step is needed in inverse proportion to the square of the velocity. Thus as velocity increases, the time step must become quite small for the FTCS method to be accurate.
+
+
+%------------------------------------------------------------------------------------------
+\subsection*{2D Advection Diffusion}
+%------------------------------------------------------------------------------------------
+In two dimensions $(x,y)$ the advection diffusion equation above has the FTCS solution:
+\begin{eqnarray}
+	C^{n+1}_{i,j} &=& C^n_{i,j} + a \left ( {C^{n}_{i+1,j} - C^n_{i-1,j}}\right ) +  b 
+\left ( {C^{n}_{i-1,j} - 2 C^n_{i,j}+C^n_{i-1,j}} \right )   \\
+&+ & c \left ( {C^{n}_{i,j+1} - C^n_{i,j-1}}\right ) +  b
+\left ( {C^{n}_{i,j+1} - 2 C^n_{i,j}+C^n_{i,j-1}} \right )
+\end{eqnarray}
+The $j$ subscript refers to the 2D grid's $y$ index and $c$ is the $y$ first order spatial derivative coefficient
+\begin{eqnarray}
+	c &=&  - \frac{ v \Delta t}{\Delta x} .
+\end{eqnarray}
+Here we have assumed that the $x$ and $y$ grid spacing is equal and has the value $\Delta x$. \end{document}  
